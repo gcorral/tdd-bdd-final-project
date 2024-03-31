@@ -28,6 +28,7 @@ import os
 import logging
 from decimal import Decimal
 from unittest import TestCase
+from urllib.parse import quote_plus
 from service import app
 from service.common import status
 from service.models import db, init_db, Product
@@ -211,7 +212,7 @@ class TestProductRoutes(TestCase):
         new_count = self.get_product_count()
         self.assertEqual(new_count, product_count - 1)
     
-     def test_get_product_list(self):
+    def test_get_product_list(self):
         """It should Get a list of Products"""
         self._create_products(5)
         response = self.client.get(BASE_URL)
@@ -241,6 +242,7 @@ class TestProductRoutes(TestCase):
         found = [product for product in products if product.category == category]
         found_count = len(found)
         logging.debug("Found Products [%d] %s", found_count, found)
+
         # test for available
         response = self.client.get(BASE_URL, query_string=f"category={category.name}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
